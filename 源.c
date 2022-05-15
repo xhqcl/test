@@ -1,83 +1,44 @@
 #include<stdio.h>
-#include<string.h> 
-struct Student
-{
 
-	int stuId;
-	int stuAge;
-	char stuName[100];
-	struct Student* next;
+struct Country
+{
+	char name[100];
+	int goldNum;
+	int silverNum;
+	int bronzeNum;
+	int totalNum;
 };
-void printStudent(struct Student* curp)
+typedef struct Country Country;
+
+void printCountry(Country c)
 {
-	printf("学号: %d, 年龄 : %d , 姓名:%s\n", curp->stuId, curp->stuAge, curp->stuName);
+	printf("%s %d %d %d %d\n", c.name, c.goldNum, c.silverNum, c.bronzeNum, c.totalNum);
 }
-void printLinkedList(struct Student* headp)
-{
-	while (headp != NULL)
-	{
-		printStudent(headp);
-		headp = headp->next;
-	}
-}
+
 int main()
 {
-
-	struct Student S1, S2, S3;
-	S1.stuId = 2000;
-	S1.stuAge = 20;
-	strcpy(S1.stuName, "董卓");
-
-	S2.stuId = 2001;
-	S2.stuAge = 30;
-	strcpy(S2.stuName, "吕布");
-
-	S3.stuId = 2002;
-	S3.stuAge = 12;
-	strcpy(S3.stuName, "刘备");
-
-	struct Student S4 = { 2004,19,"张飞" };
-
-	printf("S1->S2->S3->S4->NULL\n");
-
-	S1.next = &S2;
-	S2.next = &S3;
-	S3.next = &S4;
-	S4.next = NULL;
-
-
-	struct Student* curp = &S1;
-	printLinkedList(curp);
-	printf("请输入要查的学生学号:");
-	int id;
-	scanf("%d", &id);
-	curp = &S1;
-	int flag = 0;
-	while (curp != NULL)
+	Country c[8];
+	FILE* fp = fopen("C:\\m.txt", "r");
+	if (fp == NULL)
 	{
+		printf("Error!\n");
+		return 0;
+	}
+	for (int i = 0; i < 8; i++)
+	{
+		fscanf(fp, "%s %d %d %d %d", c[i].name, &c[i].goldNum, &c[i].silverNum, &c[i].bronzeNum, &c[i].totalNum);
+	}
 
-		if (curp->stuId == id)
+	fclose(fp);
+	Country min = c[0];
+	for (int i = 0; i < 8; i++)
+	{
+		if (c[i].totalNum < min.totalNum)
 		{
-			printStudent(curp);
-			flag = 1;
-			break;
-
-		}
-		else
-		{
-			curp = curp->next;
+			min = c[i];
 		}
 	}
-	if (flag == 0)
-	{
-
-		printf("找不到\n");
-	}
-	printf("接下来请删除S2");
-	S1.next = &S3;
-	S2.next = NULL;
-
-	curp = &S1;
-	printLinkedList(curp);
+	printf("奖牌数最少的国家信息\n");
+	printCountry(min);
 	return 0;
 }
